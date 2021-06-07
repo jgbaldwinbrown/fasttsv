@@ -22,16 +22,22 @@ func rearrange_cols(inconn io.Reader, outconn io.Writer, cols []int) {
     scanner.Buffer(make([]byte, 0), 10e9)
     var b strings.Builder
     b.Grow(1e6)
-    rcols := make([]string, 1000)
+    rcols := make([]string, 0, 1000)
+    out_lines := make([]string, 0, 20000)
     for scanner.Scan() {
         split_line := strings.Split(scanner.Text(), "\t")
         rcols = rearrange_col(split_line, cols, rcols)
         // fmt.Fprintln(&b, strings.Join(rcols, "\t"))
-        b.WriteString(strings.Join(rcols, "\t"))
-        if b.Len() > 100000 {
-            fmt.Fprintf(outconn, "%s", b)
-            b.Reset()
+        // b.WriteString(strings.Join(rcols, "\t"))
+        out_lines = append(out_lines, strings.Join(rcols, "\t"))
+        if len(out_lines) >= 10000 {
+            fmt.Fprintln(outconn, strings.Join(out_lines, "\n"))
+            // b.Reset()
+            out_lines = out_lines[:0]
         }
+    }
+    if len(out_lines) > 0 {
+        fmt.Fprintln(outconn, strings.Join(out_lines, "\n"))
     }
 }
 
