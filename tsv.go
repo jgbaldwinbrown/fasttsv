@@ -93,20 +93,15 @@ func manual_split(instring string, sep byte, outslice []string) []string {
 func rearrange_cols(inconn io.Reader, outconn io.Writer, cols []int) {
     scanner := bufio.NewScanner(inconn)
     scanner.Buffer(make([]byte, 0), 10e9)
-    var b strings.Builder
-    b.Grow(1e6)
     rcols := make([]string, 0, 1000)
     out_lines := make([]string, 0, 20000)
     split_line := make([]string, 0, 1000)
     for scanner.Scan() {
         split_line := manual_split(scanner.Text(), '\t', split_line)
         rcols = rearrange_col(split_line, cols, rcols)
-        // fmt.Fprintln(&b, strings.Join(rcols, "\t"))
-        // b.WriteString(strings.Join(rcols, "\t"))
         out_lines = append(out_lines, strings.Join(rcols, "\t"))
         if len(out_lines) >= 10000 {
             fmt.Fprintln(outconn, strings.Join(out_lines, "\n"))
-            // b.Reset()
             out_lines = out_lines[:0]
         }
     }
