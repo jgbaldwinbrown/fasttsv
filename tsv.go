@@ -9,6 +9,63 @@ import (
     "github.com/pkg/profile"
 )
 
+type Scanner struct {
+    InScanner bufio.Scanner
+    LineBuffer []string
+}
+
+func NewScanner(inreader io.Reader) *Reader {
+    line := make([]string, 0, 1000)
+    scanner := bufio.NewScanner(inconn)
+    scanner.Buffer(make([]byte, 0, 10e9))
+    out := Reader {
+        InScanner,
+        LineBuffer: line,
+    }
+    return &out
+}
+
+func (s *Scanner) Scan() bool {
+    out := s.InScanner.Scan()
+    if !out {
+        return out
+    }
+    s.Line = manual_split(s.InScanner.Text(), '\t', s.Line)
+    return out
+}
+
+func (s *Scanner) Line() []slice {
+    return s.LineBuffer
+}
+
+type Writer struct {
+    OutWriter io.Writer
+    LinesBuffer []string
+}
+
+func NewWriter(outwriter io.Writer) *Writer {
+    lines := make([]string, 0, 20000)
+    out := Writer {
+        OutWriter: outwriter,
+        LinesBuffer: lines,
+    }
+    return &out
+}
+
+func (w *Writer) Flush() {
+    if len(s.LinesBuffer) > 0 {
+        fmt.Fprintln(w.OutWriter, strings.Join(s.LinesBuffer, "\n"))
+        s.LinesBuffer = s.LinesBuffer[:0]
+    }
+}
+
+func (w *Writer) Write(line []string) {
+    s.LinesBuffer = append(s.LinesBuffer, strings.Join(line, "\t"))
+    if len(s.LinesBuffer) >= 10000 {
+        s.Flush()
+    }
+}
+
 func rearrange_col(split_line []string, cols []int, old_rcols []string) []string {
     out := old_rcols[:0]
     for _, col := range cols {
