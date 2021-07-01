@@ -1,4 +1,4 @@
-package gotsv
+package fasttsv
 
 import (
     "fmt"
