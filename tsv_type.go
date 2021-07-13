@@ -39,6 +39,10 @@ func (t *Tsv) GetLine(linenum int) []string {
 	return t.Lines[linenum]
 }
 
+func (t *Tsv) NumLines() int {
+	return len(t.Lines)
+}
+
 func (t *Tsv) SetHeader(line []string) {
 	if t.Header == nil {
 		t.Header = make(map[string]int)
