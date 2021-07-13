@@ -92,8 +92,7 @@ func ReadTsv(r io.Reader, Header int) Tsv {
 func WriteTsv(t Tsvi, iw io.Writer) {
 	w := NewWriter(iw)
 	if t.GetHeader() != nil {
-		hline := make([]string, len(t.GetHeader()))
-		w.Write(hline)
+		w.Write(t.GetHeader())
 	}
 	for i:=0; i<t.NumLines(); i++ {
 		l := t.GetLine(i)
