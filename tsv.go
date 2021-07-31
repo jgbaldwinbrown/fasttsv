@@ -28,7 +28,7 @@ func (s *Scanner) Scan() bool {
 	if !out {
 		return out
 	}
-	s.LineBuffer = manual_split(s.InScanner.Text(), '\t', s.Line())
+	s.LineBuffer = ManualSplit(s.InScanner.Text(), '\t', s.Line())
 	return out
 }
 
@@ -64,7 +64,7 @@ func (w *Writer) Write(line []string) {
 	}
 }
 
-func manual_split(instring string, sep byte, outslice []string) []string {
+func ManualSplit(instring string, sep byte, outslice []string) []string {
 	outslice = outslice[:0]
 	start := 0
 	end := 0
