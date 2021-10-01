@@ -44,9 +44,7 @@ func (t *Tsv) NumLines() int {
 }
 
 func (t *Tsv) SetHeader(line []string) {
-	if t.Header == nil {
-		t.Header = make(map[string]int)
-	}
+	t.Header = make(map[string]int)
 	for i, s := range line {
 		t.Header[s] = i
 	}
