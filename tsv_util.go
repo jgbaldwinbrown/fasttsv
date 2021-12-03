@@ -25,10 +25,18 @@ func ToFloat(s string) float64 {
 	return f
 }
 
-func ToFloats(ss []string) []float64 {
-	var f []float64
+func ToFloats(ss []string) (f []float64) {
 	for _, s := range ss {
 		f = append(f, ToFloat(s))
 	}
 	return f
+}
+
+func RemoveNaNs(fs []float64) (ofs []float64) {
+	for _, f := range fs {
+		if ! math.IsNaN(f) {
+			ofs = append(ofs, f)
+		}
+	}
+	return ofs
 }
