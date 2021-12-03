@@ -2,44 +2,12 @@ package fasttsv
 
 import (
 	"strconv"
+	"math"
 )
-
-type Type int
-
-const (
-	BOOL Type = iota
-	INT
-	FLOAT
-	STRING
-)
-
-type Typed interface {
-	Type() Type
-}
-
-type Int int64
-func (i Int) Type() {
-	return INT
-}
-
-type Bool bool
-func (b Bool) Type() {
-	return BOOL
-}
-
-type Float float64
-func (b Float) Type() {
-	return FLOAT
-}
-
-type String string
-func (b String) Type() {
-	return STRING
-}
 
 func Col(t Tsvi, cnum int) (col []string) {
 	for i:=0; i<t.NumLines(); i++ {
-		line := t.Line(i)
+		line := t.GetLine(i)
 		if len(line) <= cnum {
 			col = append(col, "")
 		} else {
@@ -49,20 +17,18 @@ func Col(t Tsvi, cnum int) (col []string) {
 	return col
 }
 
-func Conv(s string) (t Typed) {
-	i, err := strconv.Atoi(s)
-	if err == nil {
-		return Int(i)
-	}
+func ToFloat(s string) float64 {
 	f, err := strconv.ParseFloat(s, 64)
-	if err == nil {
-		return Float(i)
+	if err != nil {
+		f = math.NaN()
 	}
-	if s == "true" {
-		return Bool(true)
+	return f
+}
+
+func ToFloats(ss []string) []float64 {
+	var f []float64
+	for _, s := range ss {
+		f = append(f, ToFloat(s))
 	}
-	if s == "false" {
-		return Bool(false)
-	}
-	return String(s)
+	return f
 }
