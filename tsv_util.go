@@ -3,6 +3,7 @@ package fasttsv
 import (
 	"strconv"
 	"math"
+	"fmt"
 )
 
 func Col(t Tsvi, cnum int) (col []string) {
@@ -39,4 +40,11 @@ func RemoveNaNs(fs []float64) (ofs []float64) {
 		}
 	}
 	return ofs
+}
+
+func ToStrings(fs []float64) (ss []string) {
+	for _, f := range fs {
+		ss = append(ss, fmt.Sprintf("%g", f))
+	}
+	return ss
 }
