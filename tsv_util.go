@@ -12,7 +12,7 @@ func Col(t Tsvi, cnum int) (col []string) {
 		if len(line) <= cnum {
 			col = append(col, "")
 		} else {
-			col = append(col, line[i])
+			col = append(col, line[cnum])
 		}
 	}
 	return col
