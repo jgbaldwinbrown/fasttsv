@@ -28,7 +28,7 @@ func (s *Scanner) Scan() bool {
 	if !out {
 		return out
 	}
-	s.LineBuffer = ManualSplit(s.InScanner.Text(), '\t', s.Line())
+	s.LineBuffer = Split(s.InScanner.Text(), '\t', s.Line())
 	return out
 }
 
@@ -36,35 +36,16 @@ func (s *Scanner) Line() []string {
 	return s.LineBuffer
 }
 
-type Writer struct {
-	OutWriter io.Writer
-	LinesBuffer []string
+func Fprint(w io.Writer, line []string) {
+	fmt.Fprintln(w, strings.Join(line, "\t"))
 }
 
-func NewWriter(outwriter io.Writer) *Writer {
-	lines := make([]string, 0, 20000)
-	out := Writer {
-		OutWriter: outwriter,
-		LinesBuffer: lines,
-	}
-	return &out
+func Fprintln(w io.Writer, line []string) {
+	Fprint(w, line)
+	fmt.Fprint(w, "\n")
 }
 
-func (w *Writer) Flush() {
-	if len(w.LinesBuffer) > 0 {
-		fmt.Fprintln(w.OutWriter, strings.Join(w.LinesBuffer, "\n"))
-		w.LinesBuffer = w.LinesBuffer[:0]
-	}
-}
-
-func (w *Writer) Write(line []string) {
-	w.LinesBuffer = append(w.LinesBuffer, strings.Join(line, "\t"))
-	if len(w.LinesBuffer) >= 10000 {
-		w.Flush()
-	}
-}
-
-func ManualSplit(instring string, sep byte, outslice []string) []string {
+func Split(instring string, sep byte, outslice []string) []string {
 	outslice = outslice[:0]
 	start := 0
 	end := 0

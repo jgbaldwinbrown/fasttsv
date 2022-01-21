@@ -87,14 +87,12 @@ func ReadTsv(r io.Reader, Header int) Tsv {
 	return out
 }
 
-func WriteTsv(t Tsvi, iw io.Writer) {
-	w := NewWriter(iw)
+func WriteTsv(t Tsvi, w io.Writer) {
 	if t.GetHeader() != nil {
-		w.Write(t.GetHeader())
+		Fprintln(w, t.GetHeader())
 	}
 	for i:=0; i<t.NumLines(); i++ {
 		l := t.GetLine(i)
-		w.Write(l)
+		Fprintln(w, l)
 	}
-	w.Flush()
 }
