@@ -10,7 +10,7 @@ import (
 type Scanner struct {
 	InScanner *bufio.Scanner
 	LineBuffer []string
-	Builder strings.Builder
+	Builder []byte
 	Separator byte
 	Escape byte
 }
@@ -22,7 +22,7 @@ func NewScanner(inreader io.Reader) *Scanner {
 	out := Scanner {
 		InScanner: scanner,
 		LineBuffer: line,
-		Builder: strings.Builder{},
+		Builder: []byte{},
 		Separator: '\t',
 		Escape: '\\',
 	}
@@ -67,23 +67,23 @@ func Split(instring string, sep byte, outslice []string) []string {
 	return outslice
 }
 
-func BsSplitOne(ret *strings.Builder, s string, sep byte, bs byte) (first, rest string) {
-	ret.Reset()
+func BsSplitOne(ret *[]byte, s string, sep byte, bs byte) (first, rest string) {
+	*ret = (*ret)[:0]
 	for i:=0; i<len(s); i++ {
 		if s[i] == bs {
 			i++
-			ret.WriteByte(s[i])
+			*ret = append(*ret, s[i])
 		} else if s[i] == sep {
-			return ret.String(), s[i+1:]
+			return string(*ret), s[i+1:]
 		} else {
-			ret.WriteByte(s[i])
+			*ret = append(*ret, s[i])
 		}
 
 	}
-	return ret.String(), ""
+	return string(*ret), ""
 }
 
-func BsSplit(ret []string, build *strings.Builder, s string, sep byte, bs byte) []string {
+func BsSplit(ret []string, build *[]byte, s string, sep byte, bs byte) []string {
 	ret = ret[:0]
 	for len(s) > 0 {
 		var tok string
