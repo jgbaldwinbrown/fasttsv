@@ -1,1 +1,1 @@
-go tool pprof --pdf ./tsv ./cpu${1}.pprof > file.pdf
+go tool pprof --pdf ./rearrange_tsv ./cpu${1}.pprof > file.pdf
