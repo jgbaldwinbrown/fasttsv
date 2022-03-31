@@ -2,6 +2,7 @@
 set -e
 
 go build tsv.go
-./tsv <test2.txt | head
 time ./rearrange_tsv <test2.txt >/dev/null
+gunzip -c bigtest.txt.gz > bigtest.txt
 time ./rearrange_tsv <bigtest.txt >/dev/null
+rm bigtest.txt
