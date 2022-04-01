@@ -52,20 +52,20 @@ func FprintEscapeEntry(build *[]byte, entry string, sep byte, bs byte) {
 	}
 }
 
-func FprintEscape(w io.Writer, line []string, sep byte, bs byte) {
-	build := make([]byte, 0, 1000)
+func FprintEscape(w io.Writer, buf *[]byte, line []string, sep byte, bs byte) {
+	*buf = (*buf)[:0]
 	if len(line) > 0 {
-		FprintEscapeEntry(&build, line[0], sep, bs)
+		FprintEscapeEntry(buf, line[0], sep, bs)
 	}
 	for _, entry := range line[1:] {
-		build = append(build, sep)
-		FprintEscapeEntry(&build, entry, sep, bs)
+		*buf = append(*buf, sep)
+		FprintEscapeEntry(buf, entry, sep, bs)
 	}
-	w.Write(build)
+	w.Write(*buf)
 }
 
-func FprintlnEscape(w io.Writer, line []string, sep byte, bs byte) {
-	FprintEscape(w, line, sep, bs)
+func FprintlnEscape(w io.Writer, buf *[]byte, line []string, sep byte, bs byte) {
+	FprintEscape(w, buf, line, sep, bs)
 	w.Write([]byte("\n"))
 }
 
