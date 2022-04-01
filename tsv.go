@@ -42,8 +42,39 @@ func (s *Scanner) Line() []string {
 	return s.LineBuffer
 }
 
+func FprintEscapeEntry(build *strings.Builder, entry string, sep byte, bs byte) {
+	for i:=0; i<len(entry); i++ {
+		b := entry[i]
+		if b == sep || b == bs {
+			build.WriteByte(bs)
+		}
+		build.WriteByte(b)
+	}
+}
+
+func FprintEscape(w io.Writer, line []string, sep byte, bs byte) {
+	var build strings.Builder
+	if len(line) > 0 {
+		FprintEscapeEntry(&build, line[0], sep, bs)
+	}
+	for _, entry := range line[1:] {
+		fmt.Fprint(&build, string(sep))
+		FprintEscapeEntry(&build, entry, sep, bs)
+	}
+	fmt.Fprint(w, build.String())
+}
+
+func FprintlnEscape(w io.Writer, line []string, sep byte, bs byte) {
+	FprintEscape(w, line, sep, bs)
+	fmt.Fprint(w, "\n")
+}
+
+func FprintSep(w io.Writer, line []string, sep string) {
+	fmt.Fprintln(w, strings.Join(line, sep))
+}
+
 func Fprint(w io.Writer, line []string) {
-	fmt.Fprintln(w, strings.Join(line, "\t"))
+	FprintSep(w, line, "\t")
 }
 
 func Fprintln(w io.Writer, line []string) {
